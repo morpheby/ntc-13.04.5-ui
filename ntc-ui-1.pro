@@ -8,7 +8,9 @@ SOURCES += main.cpp \
     serial/Atom.cpp \
     serial/Log.cpp \
     serial/Logger.cpp \
-    serial/SerialComm.cpp
+    serial/SerialComm.cpp \
+    pdapi.cpp \
+    modbusdriver.cpp
 
 unix {
     SOURCES += serial/CommHandler-unix.cpp
@@ -34,4 +36,6 @@ HEADERS += \
     serial/Logger.h \
     serial/platform.h \
     serial/SerialComm.h \
-    serial/SerialComm.hpp
+    serial/SerialComm.hpp \
+    pdapi.h \
+    modbusdriver.h

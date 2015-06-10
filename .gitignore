@@ -2,5 +2,5 @@
 *.user
 build/
 .DS_Store
-
+*.autosave
 
