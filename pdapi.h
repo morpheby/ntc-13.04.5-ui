@@ -117,6 +117,11 @@ class PdApi
 public:
     PdApi();
 
+    template<typename T>
+    T readRegister(const RegisterInfo<T>& registerInfo) const;
+
+    template<typename T>
+    void writeRegister(const RegisterInfo<T>& registerInfo, const T& value) const;
 };
 
 }

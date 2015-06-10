@@ -1,7 +1,8 @@
 #include "modbusdriver.h"
 
-ModBusDriver::ModBusDriver()
-{
+using namespace ModBus;
+
+ModBusDriver::ModBusDriver(const std::string &portLocation) {
 
 }
 
