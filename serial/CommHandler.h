@@ -8,7 +8,7 @@
 #ifndef COMMHANDLER_H_
 #define COMMHANDLER_H_
 
-#ifdef HAVE_TERMIOS_H
+#ifndef COMM_USE_WINDOWS_BACKEND
 #include <termios.h>
 #endif
 

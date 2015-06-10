@@ -8,8 +8,6 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#include "config.h"
-
 #if defined(_WIN32) || defined(__MINGW32__)
 
 #define WINVER 0x0501
@@ -25,7 +23,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#define COMM_USE_WINDOWS_BACKEND
+#define COMM_USE_WINDOWS_BACKEND 1
 
 #endif /* WIN32 */
 

@@ -2,15 +2,21 @@ TEMPLATE = app
 
 QT += qml quick
 
+CONFIG += c++11
+
 SOURCES += main.cpp \
-    serialcomm.cpp \
     serial/Atom.cpp \
-    serial/CommHandler-unix.cpp \
-    serial/CommHandler-windows.cpp \
     serial/Log.cpp \
     serial/Logger.cpp \
-    serial/SerialComm.cpp \
-    serial/SerialComm_test.cpp
+    serial/SerialComm.cpp
+
+unix {
+    SOURCES += serial/CommHandler-unix.cpp
+}
+
+win32 {
+    SOURCES += serial/CommHandler-windows.cpp
+}
 
 RESOURCES += qml.qrc
 
@@ -21,7 +27,6 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 HEADERS += \
-    serialcomm.h \
     serial/Atom.h \
     serial/Atom.hpp \
     serial/CommHandler.h \
