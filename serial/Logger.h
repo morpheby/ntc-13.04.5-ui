@@ -34,6 +34,7 @@ std::string MakeDebugString(const std::string &file, int line, const std::string
 class info_exception : public std::exception{
 	std::string happenedWhile_;
 	std::string happenedIn_;
+    std::string tmpHold_;
 
 public:
 	info_exception(const std::string& happenedWhile, const std::string &happenedIn);
@@ -44,8 +45,8 @@ public:
 };
 
 class posix_error_exception : public info_exception {
-	int error_;
-	std::string happenedWhile_;
+    int error_;
+    std::string tmpHold_;
 
 public:
 	posix_error_exception(const std::string& happenedWhile,	const std::string &happenedIn);

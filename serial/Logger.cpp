@@ -17,6 +17,7 @@ Logger * Logger::instance_;
 info_exception::info_exception(const std::string &happenedWhile, const std::string &happenedIn) :
 		happenedWhile_(happenedWhile),
 		happenedIn_(happenedIn) {
+    tmpHold_ = "Exception occured while " + getWhile();
 }
 
 std::string info_exception::getWhile() const {
@@ -24,13 +25,15 @@ std::string info_exception::getWhile() const {
 }
 
 const char * info_exception::what() const noexcept {
-	return ("Exception occured while " + getWhile()).c_str();
+    return tmpHold_.c_str();
 }
 
 posix_error_exception::posix_error_exception(const std::string& happenedWhile,
 			const std::string& happenedIn) :
 		info_exception(happenedWhile, happenedIn),
 		error_(errno) {
+    tmpHold_ = "Error occured - " + Logger::getPosixErrorDescription(getErrno()) +
+            " - while " + getWhile();
 }
 
 int posix_error_exception::getErrno() const {
@@ -38,8 +41,7 @@ int posix_error_exception::getErrno() const {
 }
 
 const char * posix_error_exception::what() const noexcept {
-	return ("Error occured - " + Logger::getPosixErrorDescription(getErrno()) +
-			" - while " + getWhile()).c_str();
+    return tmpHold_.c_str();
 }
 
 

@@ -13,6 +13,10 @@ SOURCES += main.cpp \
     modbusdriver.cpp \
     modbusconnection.cpp
 
+CONFIG(debug) {
+    DEFINES += DEBUG
+}
+
 unix {
     SOURCES += serial/CommHandler-unix.cpp
 }
@@ -20,6 +24,9 @@ unix {
 win32 {
     SOURCES += serial/CommHandler-windows.cpp
 }
+
+CONFIG += link_pkgconfig
+PKGCONFIG += libmodbus
 
 RESOURCES += qml.qrc
 
@@ -40,4 +47,7 @@ HEADERS += \
     serial/SerialComm.hpp \
     pdapi.h \
     modbusdriver.h \
-    modbusconnection.h
+    modbusconnection.h \
+    modbusconnection.hpp \
+    modbusshared.h \
+    pdapi.hpp

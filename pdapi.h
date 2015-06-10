@@ -2,6 +2,7 @@
 #define PDAPI_H
 
 #include <string>
+#include <modbusconnection.h>
 
 namespace PD {
 
@@ -14,6 +15,7 @@ struct RegisterInfo {
 };
 
 class Registers {
+public:
     static RegisterInfo<int> BRG_VAL;
 
     static RegisterInfo<float> ADC0;
@@ -113,17 +115,19 @@ class Registers {
 
 class PdApi
 {
-
+    ModBus::ModBusConnection connection_;
 public:
-    PdApi();
+    PdApi(const ModBus::ModBusConnection &connection);
 
     template<typename T>
-    T readRegister(const RegisterInfo<T>& registerInfo) const;
+    T readRegister(const RegisterInfo<T>& registerInfo);
 
     template<typename T>
-    void writeRegister(const RegisterInfo<T>& registerInfo, const T& value) const;
+    void writeRegister(const RegisterInfo<T>& registerInfo, const T& value);
 };
 
 }
+
+#include "pdapi.hpp"
 
 #endif // PDAPI_H

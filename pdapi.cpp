@@ -101,8 +101,8 @@ RegisterInfo<int> Registers::D_Out_Init = {"D_Out_Init", "", 110, 1};
 RegisterInfo<int> Registers::AD_12b = {"AD_12b", "", 111, 1};
 
 
-PdApi::PdApi()
-{
+PdApi::PdApi(const ModBus::ModBusConnection &connection) :
+    connection_{connection} {
 
 }
 
