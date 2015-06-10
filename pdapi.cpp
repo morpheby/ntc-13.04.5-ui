@@ -2,9 +2,6 @@
 
 using namespace PD;
 
-
-RegisterInfo<int> Registers::BRG_VAL = {"BRG_VAL", "", 0, 1};
-
 RegisterInfo<int> Registers::BRG_VAL = {"BRG_VAL", "", 0, 1};
 
 RegisterInfo<float> Registers::ADC0 = {"ADC0", "", 1, 2};
