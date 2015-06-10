@@ -18,6 +18,7 @@
 #include "Atom.h"
 
 /* Add -DNO_SPACEMARK_PARITY, if your model doesn't support space/mark parity */
+/* Add -DUSE_9BIT_MODE to use 9Bit-per-byte mode */
 
 namespace comm {
 
@@ -27,6 +28,12 @@ enum class ParityMode;
 }
 
 class SerialComm {
+#ifdef USE_9BIT_MODE
+    typedef unit16_t bufferDataType;
+#else
+    typedef uint8_t bufferDataType;
+#endif
+
 	const std::string connStr_;
 	util::Atom<bool> exiting_;
 	const std::shared_ptr<internal::CommHandler> commPort_;
@@ -34,27 +41,30 @@ class SerialComm {
 	std::mutex portConfigMutex_, recvMutex_, sendMutex_;
 	std::condition_variable receiveDataReady_, sendDataReady_;
 
-	std::queue<uint16_t> receiveBuffer_, sendBuffer_;
+    std::queue<bufferDataType> receiveBuffer_, sendBuffer_;
 
+#ifdef USE_9BIT_MODE
+    static uint16_t processParityBit(char received, bool isParityError, internal::ParityMode parMode);
+    static internal::ParityMode processParityReverse(uint16_t byteToSend);
+    static bool getEvenParity(uint8_t byte);
+    static bool getOddParity(uint8_t byte);
+#endif
 
-	uint16_t read9BitByte();
+    void writeByte(bufferDataType byte);
+    bufferDataType readByte();
+
 	int processRawDataStream();
 
-	static uint16_t processParityBit(char received, bool isParityError, internal::ParityMode parMode);
-	static internal::ParityMode processParityReverse(uint16_t byteToSend);
-	static bool getEvenParity(uint8_t byte);
-	static bool getOddParity(uint8_t byte);
 	size_t readNoLock(uint8_t *buf, size_t sz);
 
-	void write9BitByte(uint16_t byte);
-	void processRawOutput(uint16_t byte);
+    void processRawOutput(bufferDataType byte);
 protected:
 	std::shared_ptr<internal::CommHandler> getCommHandler() const;
 	void resetCommConfig();
 	void dataReader();
 	void dataWriter();
 public:
-	SerialComm(const std::string &connectionString);
+    SerialComm(const std::string &connectionString);
 	virtual ~SerialComm();
 	bool isExiting() const;
 	void setExiting(bool exiting);

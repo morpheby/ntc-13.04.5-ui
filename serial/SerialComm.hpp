@@ -14,14 +14,14 @@ namespace comm {
 template <typename _ForwardIterator>
 void SerialComm::read(_ForwardIterator begin, _ForwardIterator end) {
 	while(begin != end) {
-		*(begin++) = read9BitByte();
+        *(begin++) = readByte();
 	}
 }
 
 template <typename _ForwardIterator>
 void SerialComm::write(_ForwardIterator begin, _ForwardIterator end) {
 	while(begin != end) {
-		write9BitByte(*(begin++));
+        writeByte(*(begin++));
 	}
 }
 

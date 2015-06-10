@@ -44,8 +44,9 @@ void SerialComm::resetCommConfig() {
 	handler->setStopBitsCount(2);
 	handler->setReceiveEnable(true);
 	handler->setPlatformCompatibilityFlags();
-	handler->setMapBreakToInterrupt(true);
-	handler->setParityErrorCheckEnable(true);
+    handler->setMapBreakToInterrupt(true);
+#ifdef USE_9BIT_MODE
+    handler->setParityErrorCheckEnable(true);
 	handler->setParityErrorMark(true);
 	handler->setParityErrorIgnore(false);
 #ifdef NO_SPACEMARK_PARITY
@@ -53,9 +54,89 @@ void SerialComm::resetCommConfig() {
 #else
 	handler->setParityMode(internal::ParityMode::SPACE);
 #endif
+#else /* USE_9BIT_MODE */
+    handler->setParityErrorMark(false);
+    handler->setParityErrorIgnore(true);
+    handler->setParityErrorCheckEnable(false);
+#endif /* USE_9BIT_MODE */
 }
 
-uint16_t SerialComm::read9BitByte() {
+#ifdef USE_9BIT_MODE
+
+uint16_t SerialComm::processParityBit(char received, bool isParityError,
+        internal::ParityMode parMode) {
+    uint16_t rcv = (uint8_t) received;
+    switch(parMode) {
+#ifndef NO_SPACEMARK_PARITY
+    case internal::ParityMode::SPACE:
+        if(isParityError)
+            rcv |= (1<<8);
+        break;
+    case internal::ParityMode::MARK:
+        if(!isParityError)
+            rcv |= (1<<8);
+        break;
+#endif
+    case internal::ParityMode::ODD:
+        if(getOddParity(received) == !isParityError)
+            rcv |= (1<<8);
+        break;
+    case internal::ParityMode::EVEN:
+        if(getEvenParity(received) == !isParityError)
+            rcv |= (1<<8);
+        break;
+    case internal::ParityMode::NONE:
+        break;
+    }
+    return rcv;
+}
+
+bool SerialComm::getEvenParity(uint8_t byte) {
+//	bool p = false;
+//	for(; byte; byte >>= 1)
+//		p ^= byte & 1;
+//	return p;
+
+    // The parity matrix (0 = even number of 1's)
+    static const int parity[256]={
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
+        0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0};
+    return parity[byte];
+}
+
+bool SerialComm::getOddParity(uint8_t byte) {
+    return getEvenParity(byte) ^ 1;
+}
+
+internal::ParityMode SerialComm::processParityReverse(uint16_t byteToSend) {
+#ifndef NO_SPACEMARK_PARITY
+    if(byteToSend & (1 << 8))
+        return internal::ParityMode::MARK;
+    else
+        return internal::ParityMode::SPACE;
+#else
+    if(getEvenParity(byteToSend & 0xFFU) != (byteToSend >> 8))
+        return internal::ParityMode::ODD;
+    else
+        return internal::ParityMode::EVEN;
+#endif
+}
+
+SerialComm::bufferDataType SerialComm::read9BitByte() {
 	std::unique_lock<std::mutex> lock(recvMutex_);
 
 	while(receiveBuffer_.empty())
@@ -66,9 +147,36 @@ uint16_t SerialComm::read9BitByte() {
 	return byte;
 }
 
-int SerialComm::processRawDataStream() {
-	auto parMode  = getCommHandler()->getParityMode();
+void SerialComm::write9BitByte(SerialComm::bufferDataType byte) {
+    {
+        std::lock_guard<std::mutex> lock (sendMutex_);
+        sendBuffer_.push(byte);
+    }
+    sendDataReady_.notify_one();
+}
 
+#endif /* USE_9BIT_MODE */
+
+SerialComm::bufferDataType SerialComm::readByte() {
+    std::unique_lock<std::mutex> lock(recvMutex_);
+
+    while(receiveBuffer_.empty())
+        receiveDataReady_.wait(lock);
+
+    bufferDataType byte = receiveBuffer_.front();
+    receiveBuffer_.pop();
+    return byte;
+}
+
+void SerialComm::writeByte(SerialComm::bufferDataType byte) {
+    {
+        std::lock_guard<std::mutex> lock (sendMutex_);
+        sendBuffer_.push(byte);
+    }
+    sendDataReady_.notify_one();
+}
+
+int SerialComm::processRawDataStream() {
 	uint8_t rcv[3];
 	int sz = 0;
 	uint16_t byte = 0;
@@ -78,6 +186,8 @@ int SerialComm::processRawDataStream() {
 
 		readNoLock(rcv, 1);
 		++sz;
+#ifdef USE_9BIT_MODE
+        auto parMode  = getCommHandler()->getParityMode();
 		if(rcv[0] == 0xFF) { // parity error marker start
 			readNoLock(rcv+1, 1);
 			++sz;
@@ -93,6 +203,7 @@ int SerialComm::processRawDataStream() {
 		} else {
 			byte = processParityBit(rcv[0], false, parMode);
 		}
+#endif /* USE_9BIT_MODE */
 		receiveBuffer_.push(byte);
 	}
 
@@ -102,65 +213,6 @@ int SerialComm::processRawDataStream() {
 		receiveDataReady_.notify_one();
 
 	return sz;
-}
-
-uint16_t SerialComm::processParityBit(char received, bool isParityError,
-		internal::ParityMode parMode) {
-	uint16_t rcv = (uint8_t) received;
-	switch(parMode) {
-#ifndef NO_SPACEMARK_PARITY
-	case internal::ParityMode::SPACE:
-		if(isParityError)
-			rcv |= (1<<8);
-		break;
-	case internal::ParityMode::MARK:
-		if(!isParityError)
-			rcv |= (1<<8);
-		break;
-#endif
-	case internal::ParityMode::ODD:
-		if(getOddParity(received) == !isParityError)
-			rcv |= (1<<8);
-		break;
-	case internal::ParityMode::EVEN:
-		if(getEvenParity(received) == !isParityError)
-			rcv |= (1<<8);
-		break;
-	case internal::ParityMode::NONE:
-		break;
-	}
-	return rcv;
-}
-
-bool SerialComm::getEvenParity(uint8_t byte) {
-//	bool p = false;
-//	for(; byte; byte >>= 1)
-//		p ^= byte & 1;
-//	return p;
-
-	// The parity matrix (0 = even number of 1's)
-	static const int parity[256]={
-		0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-		1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-		1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-		0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-		1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-		0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-		0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-		1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-		1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-		0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-		0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-		1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-		0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-		1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-		1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-		0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0};
-	return parity[byte];
-}
-
-bool SerialComm::getOddParity(uint8_t byte) {
-	return getEvenParity(byte) ^ 1;
 }
 
 void SerialComm::dataReader() {
@@ -203,14 +255,6 @@ bool SerialComm::isExiting() const {
 	return exiting_;
 }
 
-void SerialComm::write9BitByte(uint16_t byte) {
-	{
-		std::lock_guard<std::mutex> lock (sendMutex_);
-		sendBuffer_.push(byte);
-	}
-	sendDataReady_.notify_one();
-}
-
 void SerialComm::dataWriter() {
 	while(!isExiting()) {
 		std::unique_lock<std::mutex> lock(sendMutex_);
@@ -225,23 +269,10 @@ void SerialComm::dataWriter() {
 	}
 }
 
-internal::ParityMode SerialComm::processParityReverse(uint16_t byteToSend) {
-#ifndef NO_SPACEMARK_PARITY
-	if(byteToSend & (1 << 8))
-		return internal::ParityMode::MARK;
-	else
-		return internal::ParityMode::SPACE;
-#else
-	if(getEvenParity(byteToSend & 0xFFU) != (byteToSend >> 8))
-		return internal::ParityMode::ODD;
-	else
-		return internal::ParityMode::EVEN;
-#endif
-}
-
-void SerialComm::processRawOutput(uint16_t byte) {
+void SerialComm::processRawOutput(SerialComm::bufferDataType byte) {
 	// lock port configuration while we send data
 	std::lock_guard<std::mutex> lock (portConfigMutex_);
+#ifdef USE_9BIT_MODE
 	internal::ParityMode parity = processParityReverse(byte);
 	if(getCommHandler()->getParityMode() != parity) {
 #ifdef DEBUG
@@ -269,6 +300,7 @@ void SerialComm::processRawOutput(uint16_t byte) {
 #endif
 		getCommHandler()->setParityMode(parity);
 	}
+#endif /* USE_9BIT_MODE */
 
 	ssize_t ret = internal::port_write(getCommHandler()->getCommDescriptor(), &byte, 1);
 	if(ret == -1) {
