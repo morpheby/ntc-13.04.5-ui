@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick
+QT += core gui widgets printsupport
 
 CONFIG += c++11
 
@@ -11,7 +11,10 @@ SOURCES += main.cpp \
     serial/SerialComm.cpp \
     pdapi.cpp \
     modbusdriver.cpp \
-    modbusconnection.cpp
+    modbusconnection.cpp \
+    qcustomplot.cpp \
+    mainwindow.cpp \
+    Events.cpp
 
 CONFIG(debug) {
     DEFINES += DEBUG
@@ -28,7 +31,7 @@ win32 {
 CONFIG += link_pkgconfig
 PKGCONFIG += libmodbus
 
-RESOURCES += qml.qrc
+RESOURCES +=
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -50,4 +53,10 @@ HEADERS += \
     modbusconnection.h \
     modbusconnection.hpp \
     modbusshared.h \
-    pdapi.hpp
+    pdapi.hpp \
+    qcustomplot.h \
+    mainwindow.h \
+    Events.h
+
+FORMS += \
+    mainwindow.ui

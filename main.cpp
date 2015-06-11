@@ -1,5 +1,4 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include <QApplication>
 
 #include <iostream>
 #include <algorithm>
@@ -10,6 +9,7 @@
 #include "serial/Logger.h"
 #include "pdapi.h"
 #include "modbusdriver.h"
+#include "mainwindow.h"
 
 void logging_terminate_handler() __attribute__ ((__noreturn__));
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     logger->addLog(std::make_shared<util::LogFile>("ntpc-comm", util::LogSeverity::TRACE, "ntpc-comm.log"));
     logger->addLog(std::make_shared<util::LogStream>("ntpc-comm", util::LogSeverity::ERROR, std::cerr.rdbuf()));
 
-    auto driver = ModBus::ModBusDriver("/dev/tty.usbserial-A403BH0M");
+    auto driver = ModBus::ModBusDriver("/dev/tty.usbserial-A4YUEVO4");
     auto connection = driver.connectionToDevice(0x03);
     auto api = PD::PdApi(connection);
 
@@ -33,10 +33,9 @@ int main(int argc, char *argv[])
 
     logger->log("D_In: " + std::to_string(d_in));
 
-    QGuiApplication app(argc, argv);
-
-    QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    QApplication app(argc, argv);
+    MainWindow window;
+    window.show();
 
     return app.exec();
 }

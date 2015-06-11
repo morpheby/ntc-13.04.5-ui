@@ -16,6 +16,7 @@ class ModBusDriver
     std::shared_ptr<internal::ModBusShared> modbusConnection_;
 public:
     ModBusDriver(const std::string &portLocation);
+    ~ModBusDriver();
 
     ModBusConnection connectionToDevice(int addr) const;
 };
