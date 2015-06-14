@@ -124,6 +124,8 @@ public:
 
     template<typename T>
     void writeRegister(const RegisterInfo<T>& registerInfo, const T& value);
+
+    ModBus::ModBusConnection connection() const;
 };
 
 }

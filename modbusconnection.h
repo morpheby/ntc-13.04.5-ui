@@ -33,6 +33,8 @@ public:
 
     template<size_t readSize, size_t writeSize>
     void writeRegisters(int addr, const std::array<uint16_t, writeSize> &values);
+
+    void flush();
 };
 
 } /* ModBus */

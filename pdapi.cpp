@@ -103,6 +103,9 @@ RegisterInfo<int> Registers::AD_12b = {"AD_12b", "", 111, 1};
 
 PdApi::PdApi(const ModBus::ModBusConnection &connection) :
     connection_{connection} {
+}
 
+ModBus::ModBusConnection PdApi::connection() const {
+    return this->connection_;
 }
 

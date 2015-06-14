@@ -69,3 +69,13 @@ void ModBusConnection::modbusWriteReadRegisters(int writeAddr, int nbWrite, cons
                                     writeAddr, nbWrite, src,
                                     readAddr, nbRead, dest);
 }
+
+void ModBusConnection::flush() {
+    util::Logger::getInstance()->log("Flushing connection");
+    int retval = modbus_flush(modbusConnection_->modbusCtx);
+
+    if (retval) {
+        throw util::posix_error_exception("Flushing connection",
+                                          MAKE_DEBUG_STRING());
+    }
+}
