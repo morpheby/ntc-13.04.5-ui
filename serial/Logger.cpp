@@ -54,11 +54,11 @@ Logger::~Logger() {
 }
 
 void Logger::logException(const std::exception& exc) {
-	write(LogSeverity::ERROR, std::string("Exception occured: ") + exc.what());
+    write(LogSeverity::severity_ERROR, std::string("Exception occured: ") + exc.what());
 }
 
 void Logger::logPosixError(int err, const std::string& comment) {
-	write(LogSeverity::ERROR, "Error occured - " +
+    write(LogSeverity::severity_ERROR, "Error occured - " +
 			getPosixErrorDescription(err) + " - while " + comment);
 }
 
@@ -77,11 +77,11 @@ std::shared_ptr<Logger> Logger::getShared() {
 }
 
 void Logger::logWarning(const std::string& warning) {
-	write(LogSeverity::WARNING, warning);
+    write(LogSeverity::severity_WARNING, warning);
 }
 
 void Logger::logException(const std::string& exc) {
-	write(LogSeverity::ERROR, std::string("Exception occured: ") + exc);
+    write(LogSeverity::severity_ERROR, std::string("Exception occured: ") + exc);
 }
 
 void Logger::write(LogSeverity severity, const std::string& info) {
@@ -90,16 +90,16 @@ void Logger::write(LogSeverity severity, const std::string& info) {
 }
 
 void Logger::log(const std::string& info) {
-	write(LogSeverity::INFO, info);
+    write(LogSeverity::severity_INFO, info);
 }
 
 void Logger::trace(const std::string& t) {
-	write(LogSeverity::TRACE, t);
+    write(LogSeverity::severity_TRACE, t);
 }
 
 void Logger::addLog(const std::shared_ptr<Log>& log) {
 	logs_.push_back(log);
-	log->write(LogSeverity::INFO, "Log started");
+    log->write(LogSeverity::severity_INFO, "Log started");
 }
 
 std::shared_ptr<Logger> Logger::getInstance() {

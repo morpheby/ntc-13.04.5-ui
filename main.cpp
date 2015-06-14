@@ -33,11 +33,11 @@ int main(int argc, char *argv[])
 
     auto logger = std::make_shared<util::Logger>();
 #ifdef DEBUG
-    logger->addLog(std::make_shared<util::LogFile>("ntpc-comm", util::LogSeverity::TRACE, "ntpc-comm.log"));
-    logger->addLog(std::make_shared<util::LogStream>("ntpc-comm", util::LogSeverity::ERROR, std::cerr.rdbuf()));
+    logger->addLog(std::make_shared<util::LogFile>("ntpc-comm", util::LogSeverity::severity_TRACE, "ntpc-comm.log"));
+    logger->addLog(std::make_shared<util::LogStream>("ntpc-comm", util::LogSeverity::severity_ERROR, std::cerr.rdbuf()));
 #else
-    logger->addLog(std::make_shared<util::LogFile>("ntpc-comm", util::LogSeverity::INFO, "ntpc-comm.log"));
-    logger->addLog(std::make_shared<util::LogStream>("ntpc-comm", util::LogSeverity::ERROR, std::cerr.rdbuf()));
+//    logger->addLog(std::make_shared<util::LogFile>("ntpc-comm", util::LogSeverity::severity_INFO, "ntpc-comm.log"));
+    logger->addLog(std::make_shared<util::LogStream>("ntpc-comm", util::LogSeverity::severity_ERROR, std::cerr.rdbuf()));
 #endif
 
 //    auto d_in = api.readRegister(PD::Registers::D_In);

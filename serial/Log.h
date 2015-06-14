@@ -18,10 +18,10 @@
 namespace util {
 
 enum class LogSeverity : int {
-	TRACE,
-	INFO,
-	WARNING,
-	ERROR,
+    severity_TRACE,
+    severity_INFO,
+    severity_WARNING,
+    severity_ERROR,
 };
 
 class Log {

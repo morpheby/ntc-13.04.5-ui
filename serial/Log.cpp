@@ -21,13 +21,13 @@ Log::Log(const std::string& appName, LogSeverity minSeverity) :
 
 std::string Log::getSeverity(LogSeverity s) const {
 	switch(s) {
-	case LogSeverity::TRACE:
+    case LogSeverity::severity_TRACE:
 		return ".trace.";
-	case LogSeverity::INFO:
+    case LogSeverity::severity_INFO:
 		return "(info)";
-	case LogSeverity::WARNING:
+    case LogSeverity::severity_WARNING:
 		return "(WARNING)";
-	case LogSeverity::ERROR:
+    case LogSeverity::severity_ERROR:
 		return "[[ERROR]]";
 	}
 	return "";

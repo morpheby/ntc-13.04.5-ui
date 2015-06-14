@@ -22,10 +22,14 @@ ModBusDriver::ModBusDriver(const std::string &portLocation) :
     modbus_set_debug(modbusConnection_->modbusCtx, 1);
 #endif
 
+#if defined(_WIN32) || defined(__MINGW32__)
+    modbus_set_response_timeout(modbusConnection_->modbusCtx, 0, 500000);
+#else
     struct timeval response_timeout;
     response_timeout.tv_sec = 0;
     response_timeout.tv_usec = 500000;
     modbus_set_response_timeout(modbusConnection_->modbusCtx, &response_timeout);
+#endif
 
     util::Logger::getInstance()->trace("Connecting to modbus");
     int retval = modbus_connect(modbusConnection_->modbusCtx);

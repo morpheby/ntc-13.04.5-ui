@@ -52,6 +52,8 @@ QML_IMPORT_PATH =
 # Default rules for deployment.
 include(deployment.pri)
 
+RC_ICONS = logo.ico
+
 HEADERS += \
     serial/Atom.h \
     serial/Atom.hpp \
@@ -90,3 +92,6 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 TRANSLATIONS += ntc_ru.ts
+
+DISTFILES += \
+    logo.ico

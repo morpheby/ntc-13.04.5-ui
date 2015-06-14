@@ -118,6 +118,10 @@ ssize_t port_get_input_queue_size(_CommHandle_t port) {
 	return 0;
 }
 
+ssize_t port_write(_CommHandle_t port, const void * buffer, size_t sz) {
+    return 0;
+}
+
 } /* namespace internal */
 } /* namespace comm */
 
