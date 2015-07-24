@@ -19,7 +19,7 @@
 
 #define DEVICE_VID  0x0403
 #define DEVICE_PID  0x6001
-#define DEVICE_ADDR 0x03
+#define DEVICE_ADDR 0x01
 
 void logging_terminate_handler() __attribute__ ((__noreturn__));
 
