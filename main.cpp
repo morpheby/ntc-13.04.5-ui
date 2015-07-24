@@ -116,6 +116,35 @@ int main(int argc, char *argv[])
 
         }
     });
+    QObject::connect(&window, &MainWindow::requestSetPower, &pdpoller, [&](int power) {
+        try {
+            api->writeRegister<int>(PD::Registers::Power0, power*4096/100);
+        } catch(...) {
+        }
+    });
+
+    int control0 = 0;
+    QObject::connect(&window, &MainWindow::requestSetDirection, &pdpoller, [&](bool up) {
+        try {
+            control0 = up ? (control0 | 2) : (control0 & (~2));
+            api->writeRegister<int>(PD::Registers::Control0, control0);
+        } catch(...) {
+        }
+    });
+    QObject::connect(&window, &MainWindow::requestStart, &pdpoller, [&]() {
+        try {
+            control0 |= 1;
+            api->writeRegister<int>(PD::Registers::Control0, control0);
+        } catch(...) {
+        }
+    });
+    QObject::connect(&window, &MainWindow::requestStop, &pdpoller, [&]() {
+        try {
+            control0 &= ~1;
+            api->writeRegister<int>(PD::Registers::Control0, control0);
+        } catch(...) {
+        }
+    });
 
     window.show();
 

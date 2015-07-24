@@ -30,6 +30,9 @@ public slots:
 
 private slots:
     void didPushStart();
+    void didPushUp();
+    void didPushDown();
+    void didChangePower(int power);
     void didPushStop();
     void didPushClear();
     void didPushSet();
@@ -39,6 +42,10 @@ protected:
 
 signals:
     void requestControllerSet();
+    void requestSetPower(int value);
+    void requestSetDirection(bool up);
+    void requestStart();
+    void requestStop();
 
 private:
     Ui::MainWindow *ui;

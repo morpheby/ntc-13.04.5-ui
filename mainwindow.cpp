@@ -60,8 +60,26 @@ void MainWindow::didPushStart() {
     util::Logger::getInstance()->log("Plot recording started");
 }
 
+void MainWindow::didPushUp() {
+    emit requestSetDirection(1);
+    emit requestStart();
+    util::Logger::getInstance()->log("Direction: Up, motor start");
+}
+
+void MainWindow::didPushDown() {
+    emit requestSetDirection(0);
+    emit requestStart();
+    util::Logger::getInstance()->log("Direction: Down, motor start");
+}
+
+void MainWindow::didChangePower(int power) {
+    emit requestSetPower(power);
+    util::Logger::getInstance()->log("Power set to " + std::to_string(power));
+}
+
 void MainWindow::didPushStop() {
     recording_ = false;
+    emit requestStop();
     util::Logger::getInstance()->log("Plot recording stopped");
 }
 

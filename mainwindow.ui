@@ -65,7 +65,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider">
+         <widget class="QSlider" name="powerSlider">
           <property name="value">
            <number>99</number>
           </property>
@@ -158,8 +158,8 @@
    <slot>didPushStop()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>127</x>
-     <y>545</y>
+     <x>520</x>
+     <y>565</y>
     </hint>
     <hint type="destinationlabel">
      <x>398</x>
@@ -183,11 +183,62 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>upButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>didPushUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>234</x>
+     <y>550</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>571</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>didPushDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>419</x>
+     <y>549</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>458</x>
+     <y>570</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>powerSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>didChangePower(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>635</x>
+     <y>552</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>619</x>
+     <y>566</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>didPushStart()</slot>
   <slot>didPushStop()</slot>
   <slot>didPushClear()</slot>
   <slot>didPushSet()</slot>
+  <slot>didPushUp()</slot>
+  <slot>didPushDown()</slot>
+  <slot>didChangePower(int)</slot>
  </slots>
 </ui>
