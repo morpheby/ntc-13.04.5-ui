@@ -111,6 +111,16 @@ public:
     static RegisterInfo<int> V;
     static RegisterInfo<int> D_Out_Init;
     static RegisterInfo<int> AD_12b;
+
+    static RegisterInfo<int> Control0;
+    static RegisterInfo<int> Status0;
+
+    static RegisterInfo<int> Power0;
+    static RegisterInfo<int> Position0;
+    static RegisterInfo<int> Position1;
+    static RegisterInfo<float> PositionK0;
+
+    static RegisterInfo<unsigned int> QEI_POS;
 };
 
 class PdApi

@@ -100,6 +100,15 @@ RegisterInfo<int> Registers::V = {"V", "", 109, 1};
 RegisterInfo<int> Registers::D_Out_Init = {"D_Out_Init", "", 110, 1};
 RegisterInfo<int> Registers::AD_12b = {"AD_12b", "", 111, 1};
 
+RegisterInfo<int> Registers::Control0 = {"Control0", "", 113, 1};
+RegisterInfo<int> Registers::Status0 = {"Status0", "", 114, 1};
+
+RegisterInfo<int> Registers::Power0 = {"Power0", "", 115, 1};
+RegisterInfo<int> Registers::Position0 = {"Position0", "", 116, 1};
+RegisterInfo<int> Registers::Position1 = {"Position1", "", 117, 1};
+RegisterInfo<float> Registers::PositionK0 = {"PositionK0", "", 118, 2};
+
+RegisterInfo<unsigned int> Registers::QEI_POS = {"QEI_POS", "", 120, 1};
 
 PdApi::PdApi(const ModBus::ModBusConnection &connection) :
     connection_{connection} {

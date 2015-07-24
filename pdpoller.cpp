@@ -13,8 +13,8 @@ PdPoller::PdPoller() : apiConnection_{nullptr} {
 
 void PdPoller::poll() {
     try {
-        int d_in = apiConnection_->readRegister(PD::Registers::D_In);
-        util::Logger::getInstance()->log("Received d_in: " + std::to_string(d_in));
+        int d_in = apiConnection_->readRegister(PD::Registers::Position0);
+        util::Logger::getInstance()->log("Received Position0: " + std::to_string(d_in));
 
         int adc = apiConnection_->readRegister(PD::Registers::ADC1);
         util::Logger::getInstance()->log("Received adc: " + std::to_string(adc));
