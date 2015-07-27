@@ -22,7 +22,7 @@ ModBusDriver::ModBusDriver(const std::string &portLocation) :
     modbus_set_debug(modbusConnection_->modbusCtx, 1);
 #endif
 
-#if defined(_WIN32) || defined(__MINGW32__)
+#if (defined(_WIN32) || defined(__MINGW32__)) && !defined(_WIN64)
     modbus_set_response_timeout(modbusConnection_->modbusCtx, 0, 500000);
 #else
     struct timeval response_timeout;
