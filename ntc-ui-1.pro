@@ -31,7 +31,7 @@ SOURCES += main.cpp \
     alglib/specialfunctions.cpp \
     alglib/statistics.cpp
 
-CONFIG(debug) {
+CONFIG(debug, debug|release) {
     DEFINES += DEBUG
 }
 
