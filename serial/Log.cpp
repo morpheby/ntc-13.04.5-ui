@@ -46,6 +46,7 @@ void Log::writeReal(LogSeverity severity, const std::string& str, std::ostream &
     std::strftime(s, 64, "%c %Z", &tm);
     stream << "[" << s << "] " << appName_ << " "
 			<< getSeverity(severity) << ": " << str << std::endl;
+    stream.flush();
 }
 
 void Log::write(LogSeverity severity, const std::string& str) {
