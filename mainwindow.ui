@@ -16,21 +16,32 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
       <item>
-       <widget class="QCustomPlot" name="plot" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QCustomPlot" name="f_d_plot" native="true"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCustomPlot" name="f_t_plot" native="true"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCustomPlot" name="d_f_plot" native="true"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QCustomPlot" name="d_t_plot" native="true">
+          <zorder></zorder>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QPushButton" name="startButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Start measurement</string>
           </property>
@@ -38,6 +49,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="upButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Start move up</string>
           </property>
@@ -45,6 +59,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="downButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Start move down</string>
           </property>
@@ -52,6 +69,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="stopButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Stop</string>
           </property>
@@ -66,6 +86,9 @@
         </item>
         <item>
          <widget class="QSlider" name="powerSlider">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="value">
            <number>99</number>
           </property>
@@ -101,7 +124,20 @@
          </spacer>
         </item>
         <item>
+         <widget class="QPushButton" name="btnSave">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="clearButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Clear</string>
           </property>
@@ -119,7 +155,7 @@
      <x>0</x>
      <y>0</y>
      <width>838</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

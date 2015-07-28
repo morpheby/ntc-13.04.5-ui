@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     alglib/optimization.cpp \
     alglib/solvers.cpp \
     alglib/specialfunctions.cpp \
-    alglib/statistics.cpp
+    alglib/statistics.cpp \
+    configstore.cpp
 
 CONFIG(debug, debug|release) {
     DEFINES += DEBUG
@@ -87,7 +88,8 @@ HEADERS += \
     alglib/solvers.h \
     alglib/specialfunctions.h \
     alglib/statistics.h \
-    alglib/stdafx.h
+    alglib/stdafx.h \
+    configstore.h
 
 FORMS += \
     mainwindow.ui

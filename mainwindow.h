@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTime>
 #include "pdpoller.h"
 #include <vector>
 #include <utility>
@@ -15,13 +16,15 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    QVector<double> dataXPlot_;
-    QVector<double> dataYPlot_;
+    QVector<double> dataDPlot_;
+    QVector<double> dataFPlot_;
+    QVector<double> dataTPlot_;
     bool recording_ = false;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void closeEvent(QCloseEvent * event) override;
 
 public slots:
     void pollDataUpdated(double d_in, double adc);
@@ -37,6 +40,8 @@ private slots:
     void didPushClear();
     void didPushSet();
 
+    void on_btnSave_clicked();
+
 protected:
     void timerEvent(QTimerEvent *event);
 
@@ -49,8 +54,11 @@ signals:
 
 private:
     Ui::MainWindow *ui;
+    QTime time;
+    bool haveUnsavedData;
 
     void synchronizePlot();
+    void clear();
     std::pair<QVector<double>, QVector<double>> buildSplinePoints();
 };
 
