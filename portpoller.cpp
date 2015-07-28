@@ -26,9 +26,9 @@ void PortPoller::checkPort() {
     bool portNotFound = true;
     for (auto &port : portList) {
         if (port.vendorIdentifier() == vid_ &&
-            port.productIdentifier() == pid_) {
+            port.productIdentifier() == pid_) {;
             if (!portPresent_) {
-                portPresent_ = true;
+                setConnected(true);
                 emit foundPort(port.systemLocation());
             }
             portNotFound = false;
@@ -36,12 +36,13 @@ void PortPoller::checkPort() {
         }
     }
     if (portNotFound && portPresent_) {
-        portPresent_ = false;
+        setConnected(false);
         emit portDisconnected();
     }
 }
 
 void PortPoller::setConnected(bool connected) {
+    std::lock_guard<std::mutex> __guard(lock_);
     portPresent_ = connected;
 }
 

@@ -2,6 +2,7 @@
 #define PORTPOLLER_H
 
 #include <QObject>
+#include <mutex>
 
 class PortPoller : public QObject
 {
@@ -10,6 +11,7 @@ class PortPoller : public QObject
     quint16 vid_, pid_;
     bool portPresent_ = false;
     int tmrId_ = -1;
+    std::mutex lock_;
 
     void checkPort();
 public:

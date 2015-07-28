@@ -109,7 +109,7 @@ void MainWindow::didLostConnection() {
     ui->downButton->setEnabled(false);
     ui->upButton->setEnabled(false);
     ui->powerSlider->setEnabled(false);
-    ui->btnSave->setEnabled(true);
+    ui->btnSave->setEnabled(haveUnsavedData);
     ui->stopButton->setEnabled(false);
     recording_ = false;
     statusBar()->showMessage(tr("Waiting for connection…"));

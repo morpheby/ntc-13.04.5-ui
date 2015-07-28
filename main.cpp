@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
             auto connection = driver->connectionToDevice(DEVICE_ADDR);
             api = std::make_shared<PD::PdApi>(connection);
             pdpoller->deviceConnected(api);
-            window.didConnect();
         } catch (const std::exception &e) {
             logger->logException(e);
             portpoller->setConnected(false);
@@ -103,9 +102,10 @@ int main(int argc, char *argv[])
     pollerThread.start();
 
     QObject::connect(pdpoller, &PdPoller::dataReceived, &window, &MainWindow::pollDataUpdated);
-    QObject::connect(pdpoller, &PdPoller::didLostConnection, &window, [&](){
+    QObject::connect(pdpoller, &PdPoller::didLostConnection, portpoller, [&](){
         portpoller->setConnected(false);
     });
+    QObject::connect(pdpoller, &PdPoller::didConnect, &window, &MainWindow::didConnect);
 
     QObject::connect(portpoller, &PortPoller::portDisconnected, &window, &MainWindow::didLostConnection);
     QObject::connect(pdpoller, &PdPoller::didLostConnection, &window, &MainWindow::didLostConnection);
