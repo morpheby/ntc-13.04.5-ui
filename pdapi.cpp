@@ -112,6 +112,9 @@ RegisterInfo<unsigned int> Registers::QEI_POS = {"QEI_POS", "", 120, 1};
 
 PdApi::PdApi(const ModBus::ModBusConnection &connection) :
     connection_{connection} {
+    if(readRegister(Registers::BRG_VAL) == 0) {
+        throw util::info_exception("opening PdApi connection", "device didn't answer correctly to ping request");
+    }
 }
 
 ModBus::ModBusConnection PdApi::connection() const {

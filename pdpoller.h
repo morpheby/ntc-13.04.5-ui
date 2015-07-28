@@ -23,6 +23,7 @@ public slots:
     void deviceDisconnected();
 signals:
     void dataReceived(double d_in, double adc);
+    void didLostConnection();
 protected:
     void timerEvent(QTimerEvent *event);
 };

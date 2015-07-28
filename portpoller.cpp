@@ -40,3 +40,11 @@ void PortPoller::checkPort() {
         emit portDisconnected();
     }
 }
+
+void PortPoller::setConnected(bool connected) {
+    portPresent_ = connected;
+}
+
+bool PortPoller::isConnected() const {
+    return portPresent_;
+}

@@ -55,6 +55,19 @@ int main(int argc, char *argv[])
     portpoller.moveToThread(&pollerThread);
     pdpoller.moveToThread(&pollerThread);
 
+
+    // Localization
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&qtTranslator);
+
+    QTranslator myappTranslator;
+    myappTranslator.load("ntc_" + QLocale::system().name());
+    app.installTranslator(&myappTranslator);
+
+    MainWindow window;
+
     QObject::connect(&pollerThread, &QThread::finished, &pdpoller, &QObject::deleteLater);
     QObject::connect(&pollerThread, &QThread::finished, &portpoller, &QObject::deleteLater);
     QObject::connect(&pollerThread, &QThread::started, &portpoller, &PortPoller::start);
@@ -72,14 +85,14 @@ int main(int argc, char *argv[])
 #endif
         try {
             driver = std::make_shared<ModBus::ModBusDriver>(portPathUtf8.c_str());
+            auto connection = driver->connectionToDevice(DEVICE_ADDR);
+            api = std::make_shared<PD::PdApi>(connection);
+            pdpoller.deviceConnected(api);
+            window.didConnect();
         } catch (const std::exception &e) {
             logger->logException(e);
-            return;
+            portpoller.setConnected(false);
         }
-
-        auto connection = driver->connectionToDevice(DEVICE_ADDR);
-        api = std::make_shared<PD::PdApi>(connection);
-        pdpoller.deviceConnected(api);
     });
     QObject::connect(&portpoller, &PortPoller::portDisconnected, &pdpoller, [&]() {
         driver = nullptr;
@@ -88,22 +101,13 @@ int main(int argc, char *argv[])
 
     pollerThread.start();
 
-    // Localization
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
-            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    app.installTranslator(&qtTranslator);
-
-    QTranslator myappTranslator;
-    myappTranslator.load("ntc_" + QLocale::system().name());
-    app.installTranslator(&myappTranslator);
-
-    MainWindow window;
-
     QObject::connect(&pdpoller, &PdPoller::dataReceived, &window, &MainWindow::pollDataUpdated);
+    QObject::connect(&pdpoller, &PdPoller::didLostConnection, &window, [&](){
+        portpoller.setConnected(false);
+    });
 
-    QObject::connect(&portpoller, &PortPoller::foundPort, &window, &MainWindow::didConnect);
     QObject::connect(&portpoller, &PortPoller::portDisconnected, &window, &MainWindow::didLostConnection);
+    QObject::connect(&pdpoller, &PdPoller::didLostConnection, &window, &MainWindow::didLostConnection);
 
     QObject::connect(&window, &MainWindow::requestControllerSet, &pdpoller, [&]() {
         try {

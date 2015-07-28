@@ -23,7 +23,9 @@ void PdPoller::poll() {
     } catch (const util::posix_error_exception &e) {
         util::Logger::getInstance()->logException(e);
         if (e.getErrno() == ETIMEDOUT) {
-            // Log and silently ignore
+            // Log and kill connection
+            emit didLostConnection();
+            deviceDisconnected();
         }
         try {
             apiConnection_->connection().flush();

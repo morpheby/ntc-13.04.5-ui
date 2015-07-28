@@ -14,6 +14,8 @@ class PortPoller : public QObject
     void checkPort();
 public:
     PortPoller(quint16 vid, quint16 pid);
+    void setConnected(bool connected);
+    bool isConnected() const;
 
 public slots:
     void start();
