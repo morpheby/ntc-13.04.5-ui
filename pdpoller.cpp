@@ -26,6 +26,7 @@ void PdPoller::poll() {
             // Log and kill connection
             emit didLostConnection();
             deviceDisconnected();
+            return;
         }
         try {
             apiConnection_->connection().flush();
@@ -42,6 +43,7 @@ void PdPoller::timerEvent(QTimerEvent *event) {
 void PdPoller::deviceConnected(const std::shared_ptr<PD::PdApi> &apiConnection) {
     this->setApiConnection(apiConnection);
     tmrId_ = this->startTimer(300);
+    emit didConnect();
 }
 
 void PdPoller::deviceDisconnected() {
