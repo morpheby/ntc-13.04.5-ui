@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->f_d_plot->addGraph();
     ui->f_d_plot->addGraph();
-    ui->f_d_plot->xAxis->setLabel(tr("d, cm"));
+    ui->f_d_plot->xAxis->setLabel(tr("d, mm"));
     ui->f_d_plot->yAxis->setLabel(tr("F, N"));
 
     ui->f_d_plot->xAxis->setRange(config.dMin(), config.dMax());
@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->d_f_plot->addGraph();
     ui->d_f_plot->xAxis->setLabel(tr("F, N"));
-    ui->d_f_plot->yAxis->setLabel(tr("d, cm"));
+    ui->d_f_plot->yAxis->setLabel(tr("d, mm"));
 
     ui->d_f_plot->xAxis->setRange(config.minForce(), config.maxForce());
     ui->d_f_plot->yAxis->setRange(config.dMin(), config.dMax());
@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->d_t_plot->addGraph();
     ui->d_t_plot->xAxis->setLabel(tr("t, s"));
-    ui->d_t_plot->yAxis->setLabel(tr("d, cm"));
+    ui->d_t_plot->yAxis->setLabel(tr("d, mm"));
 
     ui->d_t_plot->xAxis->setRange(0, config.timeRange());
     ui->d_t_plot->yAxis->setRange(config.dMin(), config.dMax());
@@ -435,7 +435,7 @@ void MainWindow::on_btnSave_clicked()
 
     cursor.movePosition(QTextCursor::NextCell);
     cursor.setBlockCharFormat(charFormat);
-    cursor.insertText(tr("d, cm"));
+    cursor.insertText(tr("d, mm"));
     cursor.setBlockFormat(centerAlignment);
 
     cursor.movePosition(QTextCursor::NextCell);
@@ -481,7 +481,7 @@ void MainWindow::on_btnSave_clicked()
     QString f_d_graphImage = imageFileName + "_F(d).png";
     QString d_f_graphImage = imageFileName + "_d(F).png";
     QString d_t_graphImage = imageFileName + "_d(t).png";
-    QString f_t_graphImage = imageFileName + "_f(t).png";
+    QString f_t_graphImage = imageFileName + "_F(t).png";
 
     auto f_d_plot = ui->f_d_plot;
     auto d_f_plot = ui->d_f_plot;

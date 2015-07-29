@@ -1,6 +1,12 @@
 #include "configstore.h"
 #include <QApplication>
 
+ConfigStore& ConfigStore::instance()
+{
+    static ConfigStore instance;
+    return instance;
+}
+
 ConfigStore::ConfigStore()
 {
     m_settingsFile = QApplication::applicationDirPath() + "/NTC_13_04_5.ini";

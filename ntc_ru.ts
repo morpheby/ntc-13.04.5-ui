@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru" sourcelanguage="en">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
         <source>NTC-13.04.5</source>
         <translation>НТЦ-13.04.5</translation>
-    </message>
-    <message>
-        <source>Start</source>
-        <translation type="vanished">Запуск</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="46"/>
@@ -54,25 +50,25 @@
     </message>
     <message>
         <location filename="mainwindow.cpp" line="27"/>
-        <location filename="mainwindow.cpp" line="113"/>
+        <location filename="mainwindow.cpp" line="115"/>
         <source>Waiting for connection…</source>
-        <translation>Ожидание соединения…</translation>
+        <translation>Ожидание соединения...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="33"/>
         <location filename="mainwindow.cpp" line="48"/>
         <location filename="mainwindow.cpp" line="59"/>
-        <location filename="mainwindow.cpp" line="434"/>
-        <source>d, cm</source>
-        <translation>d, см</translation>
+        <location filename="mainwindow.cpp" line="438"/>
+        <source>d, mm</source>
+        <translation>d, мм</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="34"/>
         <location filename="mainwindow.cpp" line="47"/>
         <location filename="mainwindow.cpp" line="69"/>
-        <location filename="mainwindow.cpp" line="439"/>
+        <location filename="mainwindow.cpp" line="443"/>
         <source>F, N</source>
-        <translation>F, н</translation>
+        <translation>F, Н</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="58"/>
@@ -86,75 +82,75 @@
         <translation>Устройство подключено</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="123"/>
+        <location filename="mainwindow.cpp" line="125"/>
         <source>Start a new experiment</source>
         <translation>Начать новый эксперимент</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="124"/>
+        <location filename="mainwindow.cpp" line="126"/>
         <source>Are you sure you want to start a new experiment?
 All unsaved data will be lost.</source>
         <translation>Вы уверены что хотите начать новый эксперимент?
 Все несохраненные данные будут утеряны.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="127"/>
-        <location filename="mainwindow.cpp" line="204"/>
-        <location filename="mainwindow.cpp" line="521"/>
+        <location filename="mainwindow.cpp" line="129"/>
+        <location filename="mainwindow.cpp" line="208"/>
+        <location filename="mainwindow.cpp" line="525"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="128"/>
-        <location filename="mainwindow.cpp" line="205"/>
-        <location filename="mainwindow.cpp" line="522"/>
+        <location filename="mainwindow.cpp" line="130"/>
+        <location filename="mainwindow.cpp" line="209"/>
+        <location filename="mainwindow.cpp" line="526"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="200"/>
+        <location filename="mainwindow.cpp" line="204"/>
         <source>Clear results</source>
         <translation>Очистить результаты</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="201"/>
+        <location filename="mainwindow.cpp" line="205"/>
         <source>Are you sure you want to clear results?
 All unsaved data will be lost.</source>
         <translation>Вы уверены что хотите очистить результаты?
 Все несохраненные данные будут утеряны.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="395"/>
+        <location filename="mainwindow.cpp" line="399"/>
         <source>Save report</source>
         <translation>Сохранить отчет</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="395"/>
+        <location filename="mainwindow.cpp" line="399"/>
         <source>NTC_13_04_5_report</source>
         <translation>Отчет_НТЦ_13_04_5</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="395"/>
+        <location filename="mainwindow.cpp" line="399"/>
         <source>HTML files (*.html);</source>
         <translation>Файлы HTML (*.html);</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="414"/>
+        <location filename="mainwindow.cpp" line="418"/>
         <source>NTC-13.04.5 Experiment report</source>
-        <translation>Отчет об эксперименте НТЦ-13.04.5</translation>
+        <translation>Отчет по результатам эксперимента НТЦ-13.04.5</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="429"/>
+        <location filename="mainwindow.cpp" line="433"/>
         <source>Time, s</source>
         <translation>Время, с</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="517"/>
+        <location filename="mainwindow.cpp" line="521"/>
         <source>Exit confirmation</source>
         <translation>Подтверждение выхода</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="518"/>
+        <location filename="mainwindow.cpp" line="522"/>
         <source>Are you sure you want to exit?
 All unsaved data will be lost.</source>
         <translation>Вы уверены что хотите выйти?

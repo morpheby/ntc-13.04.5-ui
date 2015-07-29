@@ -5,7 +5,7 @@
 #include <QSettings>
 
 static const double MIN_FORCE = 0;
-static const double MAX_FORCE = 2000;
+static const double MAX_FORCE = 5000;
 static const double D_MIN = 0;
 static const double D_MAX = 10;
 static const double TIME_RANGE = 60;
@@ -14,11 +14,7 @@ class ConfigStore
 {
 public:
     ~ConfigStore();
-    static ConfigStore& instance()
-    {
-        static ConfigStore instance;
-        return instance;
-    }
+    static ConfigStore& instance();
     double minForce(){return m_minForce;}
     double maxForce(){return m_maxForce;}
     double dMin(){return m_dMin;}
