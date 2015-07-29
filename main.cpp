@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
             api = std::make_shared<PD::PdApi>(connection);
             pdpoller->deviceConnected(api);
         } catch (const std::exception &e) {
+            driver = nullptr;
             logger->logException(e);
             portpoller->setConnected(false);
         }
