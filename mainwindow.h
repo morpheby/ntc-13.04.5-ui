@@ -59,7 +59,7 @@ private:
 
     void synchronizePlot();
     void clear();
-    std::pair<QVector<double>, QVector<double>> buildSplinePoints();
+    std::pair<QVector<double>, QVector<double>> buildSplinePoints(QVector<double> &xData, QVector<double> &yData);
 };
 
 #endif // MAINWINDOW_H

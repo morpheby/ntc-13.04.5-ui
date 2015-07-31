@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ConfigStore config = ConfigStore::instance();
 
+    //F(d)
     ui->f_d_plot->addGraph();
     ui->f_d_plot->addGraph();
     ui->f_d_plot->xAxis->setLabel(tr("d, mm"));
@@ -43,6 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 
 
+    //d(F)
+    ui->d_f_plot->addGraph();
     ui->d_f_plot->addGraph();
     ui->d_f_plot->xAxis->setLabel(tr("F, N"));
     ui->d_f_plot->yAxis->setLabel(tr("d, mm"));
@@ -52,8 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->d_f_plot->graph(0)->setLineStyle(QCPGraph::lsNone);
     ui->d_f_plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
+    ui->d_f_plot->graph(1)->setLineStyle(QCPGraph::lsLine);
 
-
+    //d(t)
+    ui->d_t_plot->addGraph();
     ui->d_t_plot->addGraph();
     ui->d_t_plot->xAxis->setLabel(tr("t, s"));
     ui->d_t_plot->yAxis->setLabel(tr("d, mm"));
@@ -63,7 +68,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->d_t_plot->graph(0)->setLineStyle(QCPGraph::lsNone);
     ui->d_t_plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
+    ui->d_t_plot->graph(1)->setLineStyle(QCPGraph::lsLine);
 
+    //F(t)
+    ui->f_t_plot->addGraph();
     ui->f_t_plot->addGraph();
     ui->f_t_plot->xAxis->setLabel(tr("t, s"));
     ui->f_t_plot->yAxis->setLabel(tr("F, N"));
@@ -73,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->f_t_plot->graph(0)->setLineStyle(QCPGraph::lsNone);
     ui->f_t_plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
+    ui->f_t_plot->graph(1)->setLineStyle(QCPGraph::lsLine);
 
     this->startTimer(1000);
 
@@ -213,7 +222,6 @@ void MainWindow::didPushClear() {
         }
     }
 
-
     if(clearAllowed)
     {
         clear();
@@ -259,15 +267,15 @@ void MainWindow::synchronizePlot() {
     f_t_plot->replot();
 }
 
-std::pair<QVector<double>, QVector<double>> MainWindow::buildSplinePoints() {
-    if (dataDPlot_.count() == 0 || dataFPlot_.count() == 0) {
+std::pair<QVector<double>, QVector<double>> MainWindow::buildSplinePoints(QVector<double> &xData, QVector<double> &yData) {
+    if (xData.count() == 0 || yData.count() == 0) {
         return {};
     }
 
     // First, group points
 
-    std::vector<std::pair<double, double>> values(dataDPlot_.size());
-    std::transform(dataDPlot_.begin(), dataDPlot_.end(), dataFPlot_.begin(),
+    std::vector<std::pair<double, double>> values(xData.size());
+    std::transform(xData.begin(), xData.end(), yData.begin(),
                    values.begin(), [](double x, double y) {
         return std::pair<double, double>(x, y);
     });
@@ -340,12 +348,12 @@ std::pair<QVector<double>, QVector<double>> MainWindow::buildSplinePoints() {
 }
 
 void MainWindow::timerEvent(QTimerEvent *event) {
-    auto s = this->buildSplinePoints();
+    auto f_d_spline = this->buildSplinePoints(dataDPlot_, dataFPlot_);
     auto f_d_plot = ui->f_d_plot;
-    auto graph = f_d_plot->graph(1);
-    const auto &xr = s.first;
-    const auto &yr = s.second;
-    graph->setData(s.first, s.second);
+    auto f_d_spline_graph = f_d_plot->graph(1);
+    const auto &xr = f_d_spline.first;
+    const auto &yr = f_d_spline.second;
+    f_d_spline_graph->setData(f_d_spline.first, f_d_spline.second);
 
     ConfigStore config = ConfigStore::instance();
 
@@ -371,6 +379,8 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     f_d_plot->replot();
 
     auto d_f_plot = ui->d_f_plot;
+    auto d_f_spline_graph = d_f_plot->graph(1);
+    d_f_spline_graph->setData(f_d_spline.second, f_d_spline.first);
 
     d_f_plot->yAxis->setRange(dMin, dMax);
     d_f_plot->xAxis->setRange(minForce, maxForce);
@@ -378,7 +388,14 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     d_f_plot->replot();
 
     auto d_t_plot = ui->d_t_plot;
+    auto d_t_spline_graph = d_t_plot->graph(1);
+    auto d_t_spline = buildSplinePoints(dataTPlot_, dataDPlot_);
+    d_t_spline_graph->setData(d_t_spline.first, d_t_spline.second);
+
     auto f_t_plot = ui->f_t_plot;
+    auto f_t_spline_graph = f_t_plot->graph(1);
+    auto f_t_spline = buildSplinePoints(dataTPlot_, dataFPlot_);
+    f_t_spline_graph->setData(f_t_spline.first, f_t_spline.second);
 
     double timeRange = std::max(dataTPlot_.last(), config.timeRange());
     f_t_plot->xAxis->setRange(0, timeRange);
