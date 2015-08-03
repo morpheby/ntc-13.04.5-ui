@@ -20,11 +20,13 @@ class MainWindow : public QMainWindow
     QVector<double> dataFPlot_;
     QVector<double> dataTPlot_;
     bool recording_ = false;
+    bool driverStarted = false;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void closeEvent(QCloseEvent * event) override;
+    void setDriverStarted(bool started) {driverStarted = started;}
 
 public slots:
     void pollDataUpdated(double d_in, double adc);

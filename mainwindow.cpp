@@ -106,7 +106,10 @@ void MainWindow::pollDataUpdated(double d_in, double adc) {
 }
 
 void MainWindow::didConnect() {
-    emit requestStop();
+    if(driverStarted) {
+        emit requestStop();
+        ui->stopButton->setEnabled(true);
+    }
     ui->startButton->setEnabled(true);
     ui->downButton->setEnabled(true);
     ui->upButton->setEnabled(true);
@@ -533,6 +536,15 @@ void MainWindow::on_btnSave_clicked()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     bool exitAllowed = !haveUnsavedData;
+
+    if(driverStarted) {
+        QMessageBox msgBox(QMessageBox::Warning, tr("Warning!"), tr("Driver was not stopped properly.\n Are you shure you want to exit?"), QMessageBox::Yes | QMessageBox::No);
+        if(msgBox.exec()== QMessageBox::No)
+        {
+            event->ignore();
+            return;
+        }
+    }
 
     if(haveUnsavedData) {
         QMessageBox msgBox(
