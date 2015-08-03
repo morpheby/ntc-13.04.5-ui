@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     statusBar()->showMessage(tr("Waiting for connection…"));
+    ui->powerSlider->setValue(0);
 
     ConfigStore config = ConfigStore::instance();
 
