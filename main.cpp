@@ -16,6 +16,7 @@
 #include "mainwindow.h"
 #include "pdpoller.h"
 #include "portpoller.h"
+#include "configstore.h"
 
 #define DEVICE_VID  0x0403
 #define DEVICE_PID  0x6001
@@ -45,6 +46,10 @@ int main(int argc, char *argv[])
 //    logger->log("D_In: " + std::to_string(d_in));
 
     QApplication app(argc, argv);
+
+    ConfigStore config = ConfigStore::instance();
+    int minPower = config.powerThreshold();
+    int powerCoef = (4096 - minPower)/100;
 
     std::shared_ptr<ModBus::ModBusDriver> driver = nullptr;
     std::shared_ptr<PD::PdApi> api = nullptr;
@@ -124,7 +129,11 @@ int main(int argc, char *argv[])
     });
     QObject::connect(&window, &MainWindow::requestSetPower, pdpoller, [&](int power) {
         try {
-            api->writeRegister<int>(PD::Registers::Power0, power*4096/100);
+            int value = 0;
+            if(power > 0) {
+                value = minPower+power*powerCoef;
+            }
+            api->writeRegister<int>(PD::Registers::Power0, value);
         } catch(...) {
         }
     });
@@ -141,6 +150,7 @@ int main(int argc, char *argv[])
         try {
             control0 |= 1;
             api->writeRegister<int>(PD::Registers::Control0, control0);
+            window.setDriverStarted(true);
         } catch(...) {
         }
     });
@@ -148,6 +158,7 @@ int main(int argc, char *argv[])
         try {
             control0 = 0x80;
             api->writeRegister<int>(PD::Registers::Control0, control0);
+            window.setDriverStarted(false);
         } catch(...) {
         }
     });

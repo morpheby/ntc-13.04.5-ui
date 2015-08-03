@@ -17,6 +17,7 @@ ConfigStore::ConfigStore()
     m_dMin = settings.value("D_MIN", D_MIN).toDouble();
     m_dMax = settings.value("D_MAX", D_MAX).toDouble();
     m_timeRange = settings.value("TIME_RANGE", TIME_RANGE).toDouble();
+    m_powerThreshold = settings.value("DRIVER_POWER_SENSIVITY_THRESHOLD", DRIVER_POWER_SENSIVITY_THRESHOLD).toInt();
 }
 
 ConfigStore::~ConfigStore()
@@ -27,5 +28,6 @@ ConfigStore::~ConfigStore()
     settings.setValue("D_MIN", m_dMin);
     settings.setValue("D_MAX", m_dMax);
     settings.setValue("TIME_RANGE", m_timeRange);
+    settings.setValue("DRIVER_POWER_SENSIVITY_THRESHOLD", m_powerThreshold);
 }
 
