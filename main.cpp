@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
     });
     QObject::connect(&window, &MainWindow::requestStop, pdpoller, [&]() {
         try {
-            control0 &= ~1;
+            control0 = 0x80;
             api->writeRegister<int>(PD::Registers::Control0, control0);
         } catch(...) {
         }

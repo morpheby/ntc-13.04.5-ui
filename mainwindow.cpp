@@ -106,6 +106,7 @@ void MainWindow::pollDataUpdated(double d_in, double adc) {
 }
 
 void MainWindow::didConnect() {
+    emit requestStop();
     ui->startButton->setEnabled(true);
     ui->downButton->setEnabled(true);
     ui->upButton->setEnabled(true);
@@ -143,7 +144,8 @@ void MainWindow::didPushStart() {
         }
     }
 
-    if(startAllowed) {
+    if(startAllowed)
+    {
         clear();
         recording_ = true;
         time.restart();
@@ -348,6 +350,7 @@ std::pair<QVector<double>, QVector<double>> MainWindow::buildSplinePoints(QVecto
 }
 
 void MainWindow::timerEvent(QTimerEvent *event) {
+    Q_UNUSED(event)
     auto f_d_spline = this->buildSplinePoints(dataDPlot_, dataFPlot_);
     auto f_d_plot = ui->f_d_plot;
     auto f_d_spline_graph = f_d_plot->graph(1);
@@ -509,7 +512,6 @@ void MainWindow::on_btnSave_clicked()
     d_f_plot->savePng(d_f_graphImage, 640, 480);
     f_t_plot->savePng(f_t_graphImage, 640, 480);
     d_t_plot->savePng(d_t_graphImage, 640, 480);
-
 
     f_d_graphImage.remove(0, imageFileName.lastIndexOf("/")+1);
     d_f_graphImage.remove(0, imageFileName.lastIndexOf("/")+1);
