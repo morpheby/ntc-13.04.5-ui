@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>NTC-13.04.5</string>
+   <string>NTC-13.04.2</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -29,8 +29,7 @@
          <widget class="QCustomPlot" name="d_f_plot" native="true"/>
         </item>
         <item row="1" column="1">
-         <widget class="QCustomPlot" name="d_t_plot" native="true">
-         </widget>
+         <widget class="QCustomPlot" name="d_t_plot" native="true"/>
         </item>
        </layout>
       </item>
