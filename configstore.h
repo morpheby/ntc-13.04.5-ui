@@ -5,7 +5,7 @@
 #include <QSettings>
 
 static const double MIN_FORCE = 0;
-static const double MAX_FORCE = 5000;
+static const double MAX_FORCE = 3000;
 static const double D_MIN = 0;
 static const double D_MAX = 100;
 static const double TIME_RANGE = 60;
