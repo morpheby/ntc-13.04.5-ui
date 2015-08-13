@@ -20,7 +20,7 @@ void PdPoller::poll() {
         int adc = apiConnection_->readRegister(PD::Registers::ADC0);
         util::Logger::getInstance()->log("Received adc: " + std::to_string(adc));
 
-        emit dataReceived(d_in, adc);
+        emit dataReceived(d_in, fabs(adc));
     } catch (const util::posix_error_exception &e) {
         util::Logger::getInstance()->logException(e);
         if (e.getErrno() == ETIMEDOUT) {
