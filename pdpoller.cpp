@@ -1,6 +1,7 @@
 #include "pdpoller.h"
 #include <errno.h>
 #include "serial/Logger.h"
+#include <QDebug>
 
 PdPoller::PdPoller(const std::shared_ptr<PD::PdApi> &apiConnection) :
     apiConnection_{apiConnection} {
@@ -16,7 +17,7 @@ void PdPoller::poll() {
         int d_in = apiConnection_->readRegister(PD::Registers::Position0);
         util::Logger::getInstance()->log("Received Position0: " + std::to_string(d_in));
 
-        int adc = apiConnection_->readRegister(PD::Registers::ADC1);
+        int adc = apiConnection_->readRegister(PD::Registers::ADC0);
         util::Logger::getInstance()->log("Received adc: " + std::to_string(adc));
 
         emit dataReceived(d_in, adc);
