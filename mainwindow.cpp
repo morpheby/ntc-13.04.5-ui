@@ -41,9 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->f_d_plot->graph(0)->setLineStyle(QCPGraph::lsNone);
     ui->f_d_plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
     ui->f_d_plot->graph(1)->setLineStyle(QCPGraph::lsLine);
-//    ui->plot->graph(1)->setLineStyle(QCPGraph::lsNone);
-//    ui->plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-
 
     //d(F)
     ui->d_f_plot->addGraph();
@@ -107,14 +104,16 @@ void MainWindow::pollDataUpdated(double d_in, double adc) {
 }
 
 void MainWindow::didConnect() {
-    if(driverStarted) {
-        emit requestStop();
-        ui->stopButton->setEnabled(true);
-    }
+    emit requestStop();
+    emit requestSetPower(0);
+    ui->powerSlider->setValue(0);
+    ui->stopButton->setEnabled(true);
+
     ui->startButton->setEnabled(true);
     ui->downButton->setEnabled(true);
     ui->upButton->setEnabled(true);
     ui->powerSlider->setEnabled(true);
+    ui->clearButton->setEnabled(true);
     statusBar()->showMessage(tr("Device connected"));
 }
 
@@ -165,8 +164,7 @@ void MainWindow::didPushStart() {
 }
 
 void MainWindow::didPushUp() {
-    emit requestSetDirection(1);
-    emit requestStart();
+    emit requestMoveUp();
     ui->upButton->setEnabled(false);
     ui->downButton->setEnabled(true);
     ui->stopButton->setEnabled(true);
@@ -174,8 +172,7 @@ void MainWindow::didPushUp() {
 }
 
 void MainWindow::didPushDown() {
-    emit requestSetDirection(0);
-    emit requestStart();
+    emit requestMoveDown();
     ui->upButton->setEnabled(true);
     ui->downButton->setEnabled(false);
     ui->stopButton->setEnabled(true);
@@ -420,7 +417,7 @@ void MainWindow::didPushSet() {
 
 void MainWindow::on_btnSave_clicked()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save report"), QDir::homePath().append("/").append(tr("NTC_13_04_5_report")), tr("HTML files (*.html);"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save report"), QDir::homePath().append("/").append(tr("NTC_13_04_2_report")), tr("HTML files (*.html);"));
 
     if(fileName.isEmpty())
     {
@@ -439,7 +436,7 @@ void MainWindow::on_btnSave_clicked()
     charFormat.setFont(font);
 
     cursor.setBlockCharFormat(charFormat);
-    cursor.insertText(tr("NTC-13.04.5 Experiment report"));
+    cursor.insertText(tr("NTC-13.04.2 Experiment report"));
     cursor.setBlockFormat(centerAlignment);
 
     QTextTableFormat tableFormat;
@@ -539,7 +536,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     bool exitAllowed = !haveUnsavedData;
 
     if(driverStarted) {
-        QMessageBox msgBox(QMessageBox::Warning, tr("Warning!"), tr("Driver was not stopped properly.\n Are you shure you want to exit?"), QMessageBox::Yes | QMessageBox::No);
+        QMessageBox msgBox(QMessageBox::Warning, tr("Warning!"), tr("Motor was not stopped properly.\nAre you sure you want to exit?"), QMessageBox::Yes | QMessageBox::No);
         if(msgBox.exec()== QMessageBox::No)
         {
             event->ignore();

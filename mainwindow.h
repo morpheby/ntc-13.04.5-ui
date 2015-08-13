@@ -50,8 +50,8 @@ protected:
 signals:
     void requestControllerSet();
     void requestSetPower(int value);
-    void requestSetDirection(bool up);
-    void requestStart();
+    void requestMoveUp();
+    void requestMoveDown();
     void requestStop();
 
 private:

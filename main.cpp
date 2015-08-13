@@ -138,26 +138,23 @@ int main(int argc, char *argv[])
         }
     });
 
-    int control0 = 0;
-    QObject::connect(&window, &MainWindow::requestSetDirection, pdpoller, [&](bool up) {
+    QObject::connect(&window, &MainWindow::requestMoveUp, pdpoller, [&]() {
         try {
-            control0 = up ? (control0 | 2) : (control0 & (~2));
-            api->writeRegister<int>(PD::Registers::Control0, control0);
+            api->writeRegister<int>(PD::Registers::Control0, 0x01);
+            window.setDriverStarted(true);
         } catch(...) {
         }
     });
-    QObject::connect(&window, &MainWindow::requestStart, pdpoller, [&]() {
+    QObject::connect(&window, &MainWindow::requestMoveDown, pdpoller, [&]() {
         try {
-            control0 |= 1;
-            api->writeRegister<int>(PD::Registers::Control0, control0);
+            api->writeRegister<int>(PD::Registers::Control0, 0x02);
             window.setDriverStarted(true);
         } catch(...) {
         }
     });
     QObject::connect(&window, &MainWindow::requestStop, pdpoller, [&]() {
         try {
-            control0 = 0x80;
-            api->writeRegister<int>(PD::Registers::Control0, control0);
+            api->writeRegister<int>(PD::Registers::Control0, 0x00);
             window.setDriverStarted(false);
         } catch(...) {
         }
