@@ -92,6 +92,9 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::pollDataUpdated(double d_in, double adc) {
+    if(adc > MAX_FORCE) {
+        didPushStop();
+    }
     if (recording_) {
         dataDPlot_.push_back(d_in*0.01);
         dataFPlot_.push_back(adc);
