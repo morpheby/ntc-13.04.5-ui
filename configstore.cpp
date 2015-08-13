@@ -9,7 +9,7 @@ ConfigStore& ConfigStore::instance()
 
 ConfigStore::ConfigStore()
 {
-    m_settingsFile = QApplication::applicationDirPath() + "/NTC_13_04_5.ini";
+    m_settingsFile = QApplication::applicationDirPath() + "/NTC_13_04_2.ini";
     QSettings settings(m_settingsFile, QSettings::IniFormat);
 
     m_minForce = settings.value("MIN_FORCE", MIN_FORCE).toDouble();
