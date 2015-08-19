@@ -43,8 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->f_d_plot->graph(1)->setLineStyle(QCPGraph::lsLine);
 
     //d(F)
-    ui->d_f_plot->addGraph();
-    ui->d_f_plot->addGraph();
+    ui->d_f_plot->addGraph(ui->d_f_plot->yAxis, ui->d_f_plot->xAxis);
+    ui->d_f_plot->addGraph(ui->d_f_plot->yAxis, ui->d_f_plot->xAxis);
     ui->d_f_plot->xAxis->setLabel(tr("F, N"));
     ui->d_f_plot->yAxis->setLabel(tr("d, mm"));
 
@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->f_t_plot->yAxis->setLabel(tr("F, N"));
 
     ui->f_t_plot->xAxis->setRange(0, config.timeRange());
-    ui->f_t_plot->yAxis->setRange(config.dMin(), config.dMax());
+    ui->f_t_plot->yAxis->setRange(config.minForce(), config.maxForce());
 
     ui->f_t_plot->graph(0)->setLineStyle(QCPGraph::lsNone);
     ui->f_t_plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
@@ -249,7 +249,7 @@ void MainWindow::synchronizePlot() {
     auto d_f_graph = d_f_plot->graph(0);
 
     d_f_graph->clearData();
-    d_f_graph->setData(dataFPlot_, dataDPlot_);
+    d_f_graph->setData(dataDPlot_, dataFPlot_);
 
     d_f_plot->replot();
 
@@ -261,7 +261,6 @@ void MainWindow::synchronizePlot() {
     d_t_graph->setData(dataTPlot_, dataDPlot_);
 
     d_t_plot->replot();
-
 
     //F(t) plot
     auto f_t_plot = ui->f_t_plot;
@@ -387,7 +386,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 
     auto d_f_plot = ui->d_f_plot;
     auto d_f_spline_graph = d_f_plot->graph(1);
-    d_f_spline_graph->setData(f_d_spline.second, f_d_spline.first);
+    d_f_spline_graph->setData(f_d_spline.first, f_d_spline.second);
 
     d_f_plot->yAxis->setRange(dMin, dMax);
     d_f_plot->xAxis->setRange(minForce, maxForce);
