@@ -1,7 +1,6 @@
 #include "pdpoller.h"
 #include <errno.h>
 #include "serial/Logger.h"
-#include <QDebug>
 
 PdPoller::PdPoller(const std::shared_ptr<PD::PdApi> &apiConnection) :
     apiConnection_{apiConnection} {
